@@ -1,23 +1,24 @@
-import React, {useRef, useState, useEffect} from 'react';
-import axios from 'axios';
-import Footer from '../../../components/footer/Footer';
-import Header from '../../../components/header/Header';
-import {Link, useParams} from 'react-router-dom';
-import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
-import Countdown from 'react-countdown';
-import useDocumentTitle from '../../../components/useDocumentTitle';
-import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
-import { getTokenStatus } from "../../../hooks/action"
-import { saleFunc } from "../../../hooks/action"
-import { removeSaleFunc } from "../../../hooks/action"
-import { byNowFunc } from "../../../hooks/action"
-import { useWeb3Context } from '../../../hooks';
-import { useSelector, useDispatch} from "react-redux";
+import React, { useRef, useState, useEffect } from "react";
+import axios from "axios";
+import Footer from "../../../components/footer/Footer";
+import Header from "../../../components/header/Header";
+import { Link, useParams } from "react-router-dom";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import Countdown from "react-countdown";
+import useDocumentTitle from "../../../components/useDocumentTitle";
+import Popup from "reactjs-popup";
+import "reactjs-popup/dist/index.css";
+import { getTokenStatus } from "../../../hooks/action";
+import { saleFunc } from "../../../hooks/action";
+import { removeSaleFunc } from "../../../hooks/action";
+import { byNowFunc } from "../../../hooks/action";
+import { useWeb3Context } from "../../../hooks";
+import { useSelector, useDispatch } from "react-redux";
+import { shorten, trim } from "../../../helpers";
 // Random component
 const Completionist = () => <span>auction ending soon now!</span>;
 // Renderer callback with condition
-const renderer = ({hours, minutes, seconds, completed}) => {
+const renderer = ({ hours, minutes, seconds, completed }) => {
   if (completed) {
     // Render a complete state
     return <Completionist />;
@@ -31,19 +32,21 @@ const renderer = ({hours, minutes, seconds, completed}) => {
   }
 };
 const ItemDetails = (props) => {
-  const query = new URLSearchParams(props.location.search);  
-  const tokenID = query.get('tokenID');
-  const tokenURI = query.get('tokenURI');
+  const query = new URLSearchParams(props.location.search);
+  const tokenID = query.get("tokenID");
+  const tokenURI = query.get("tokenURI");
+
+  console.log(tokenID, tokenURI);
   const owner = query.get("owner");
   const { connected, connect, provider, address } = useWeb3Context();
-  const networkID = useSelector(state => state.network?.networkId) | 97;
+  const networkID = useSelector((state) => state.network?.networkId) | 97;
   const ref = useRef();
   const closeTooltip = () => ref.current.close();
   const [isShare, setShare] = useState(false);
   const [tokenInfo, setTokenInfo] = useState([]);
-  const [tokenStatus, setTokenStatus] = useState([])
+  const [tokenStatus, setTokenStatus] = useState([]);
   const [client, setClient] = useState(false);
-  const [isSale, setIsSale] = useState(false)
+  const [isSale, setIsSale] = useState(false);
   const toggleShare = () => {
     setShare(!isShare);
   };
@@ -53,28 +56,29 @@ const ItemDetails = (props) => {
     setMore(!isMore);
   };
 
-  useEffect( () => {
-    if(connected){
+  useEffect(() => {
+    if (connected) {
       async function fetchData() {
         const metaData = await axios.get(tokenURI);
+        console.log("metaData", metaData);
         setTokenInfo(metaData.data);
-        const tokenStatus_ = await getTokenStatus(tokenID,provider, networkID);
+        const tokenStatus_ = await getTokenStatus(tokenID, provider, networkID);
         setTokenStatus(tokenStatus_);
-        setIsSale(tokenStatus_?.onSale)
+        setIsSale(tokenStatus_?.onSale);
       }
       fetchData();
     }
-    if(owner){
-      if(owner===address){
-        setClient(false)
-      }else{
-        setClient(true)
+    if (owner) {
+      if (owner === address) {
+        setClient(false);
+      } else {
+        setClient(true);
       }
-    }else{
-      setClient(false)
+    } else {
+      setClient(false);
     }
-  },[])
-  
+  }, []);
+
   // useEffect(() => {
   //   if(owner){
   //     const client_ = owner!=tokenStatus.owner;
@@ -86,26 +90,37 @@ const ItemDetails = (props) => {
   // },[tokenStatus])
 
   // useEffect(() => {
-  
+
   // },[])
-  const onSale = async () =>{
-    const isSale_ = await saleFunc(tokenInfo.price,tokenID, address, provider, networkID)
+  const onSale = async () => {
+    const isSale_ = await saleFunc(
+      tokenInfo.price,
+      tokenID,
+      address,
+      provider,
+      networkID
+    );
     setIsSale(isSale_);
-  }
+  };
 
   const onRemoveSale = async () => {
     const isSale_ = await removeSaleFunc(tokenID, provider, networkID);
     setIsSale(isSale_);
-  }
+  };
 
-  const onByNow = async () =>{
-    const isByNow = await byNowFunc(tokenInfo.price, tokenID,address, provider, networkID);
-    if(!isByNow){
-      setClient(false)
+  const onByNow = async () => {
+    const isByNow = await byNowFunc(
+      tokenInfo.price,
+      tokenID,
+      address,
+      provider,
+      networkID
+    );
+    if (!isByNow) {
+      setClient(false);
     }
-    
-  }
-  useDocumentTitle('Item Details');
+  };
+  useDocumentTitle("Item Details");
   return (
     <div>
       <Header />
@@ -125,103 +140,9 @@ const ItemDetails = (props) => {
             <div className="col-lg-6">
               <div className="space-y-20">
                 <h3>{tokenInfo.title}</h3>
-                <div className="d-flex justify-content-between">
-                  <div className="space-x-10 d-flex align-items-center">
-                    <p>1 of 1</p>
-                    <Link to="#" className="likes space-x-3">
-                      <i className="ri-heart-3-fill" />
-                      <span className="txt_sm">2.1k</span>
-                    </Link>
-                  </div>
-                  <div className="space-x-10 d-flex align-items-center">
-                    <div>
-                      <div className="share">
-                        <div className="icon" onClick={toggleShare}>
-                          <i className="ri-share-line"></i>
-                        </div>
-                        <div
-                          className={`dropdown__popup ${
-                            isShare ? 'visible' : null
-                          } `}>
-                         <ul className="space-y-10">
-                            <li>
-                            <a href="https://www.facebook.com/" rel="noreferrer"  target="_blank">
-                                <i className="ri-facebook-line"></i>
-                              </a>
-                            </li>
-                            <li>
-                            <a href="https://www.messenger.com/" rel="noreferrer"  target="_blank">
-                                <i className="ri-messenger-line"></i>
-                              </a>
-                            </li>
-                            <li>
-                            <a href="https://whatsapp.com" target="_blank" rel="noreferrer" >
-                                <i className="ri-whatsapp-line"></i>
-                              </a>
-                            </li>
-                            <li>
-                            <a href="https://youtube.com" target="_blank" rel="noreferrer" >
-                                <i className="ri-youtube-line"></i>
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="more">
-                        <div className="icon" onClick={toggleMore}>
-                          <i className="ri-more-fill"></i>
-                        </div>
-                        <div
-                          className={`dropdown__popup ${
-                            isMore ? 'visible' : null
-                          } `}>
-                          <ul className="space-y-10">
-                            <li>
-                              <Popup
-                                className="custom"
-                                ref={ref}
-                                trigger={
-                                  <Link
-                                    to="#"
-                                    className="content space-x-10 d-flex">
-                                    <i className="ri-flag-line" />
-                                    <span> Report </span>
-                                  </Link>
-                                }
-                                position="bottom center">
-                                <div>
-                                  <div
-                                    className="popup"
-                                    id="popup_bid"
-                                    tabIndex={-1}
-                                    role="dialog"
-                                    aria-hidden="true">
-                                    <div>
-                                      <div className="space-y-20">
-                                        <h5>
-                                          Thank you,
-                                          <span className="color_green">
-                                            we've received your report
-                                          </span>
-                                        </h5>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </Popup>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <select className="select_custom btn btn-dark btn-sm">
-                  <option value="A">View proof of authenticity </option>
-                  <option value="B">View on IPFS</option>
-                  <option value="C">View on BSCscan</option>
+
+                <select className="select_custom btn btn-dark btn-sm mt-5">
+                  <option value="A">View on IPFS</option>
                 </select>
 
                 <div className="box">
@@ -233,16 +154,18 @@ const ItemDetails = (props) => {
                             className="btn btn-white btn-sm"
                             data-toggle="tab"
                             to="#tabs-1"
-                            role="tab">
+                            role="tab"
+                          >
                             Details
                           </Link>
                         </Tab>
-                        <Tab>
+                        {/* <Tab>
                           <Link
                             className="btn btn-white btn-sm"
                             data-toggle="tab"
                             to="#tabs-2"
-                            role="tab">
+                            role="tab"
+                          >
                             Bids
                           </Link>
                         </Tab>
@@ -251,12 +174,12 @@ const ItemDetails = (props) => {
                             className="btn btn-white btn-sm"
                             data-toggle="tab"
                             to="#tabs-3"
-                            role="tab">
+                            role="tab"
+                          >
                             History
                           </Link>
-                        </Tab>
+                        </Tab> */}
                       </TabList>
-
                     </div>
                     <div className="hr" />
                     <div className="tab-content">
@@ -268,10 +191,10 @@ const ItemDetails = (props) => {
                           do you think?
                         </p>
                       </TabPanel>
-                      <TabPanel>
+                      {/* <TabPanel>
                         <p>No active bids yet. Be the first to make a bid!</p>
-                      </TabPanel>
-                      <TabPanel>
+                      </TabPanel> */}
+                      {/* <TabPanel>
                         <div className="space-y-20">
                           <div className="creator_item creator_card space-x-10">
                             <div className="avatars space-x-10">
@@ -296,7 +219,8 @@ const ItemDetails = (props) => {
                                   <span className="color_brand">1 BNB</span> by
                                   <Link
                                     className="color_black txt _bold"
-                                    to="profile">
+                                    to="profile"
+                                  >
                                     ayoub
                                   </Link>
                                 </p>
@@ -329,7 +253,8 @@ const ItemDetails = (props) => {
                                   <span className="color_brand">3 BNB</span> by
                                   <Link
                                     className="color_black txt _bold"
-                                    to="profile">
+                                    to="profile"
+                                  >
                                     monir
                                   </Link>
                                 </p>
@@ -340,11 +265,11 @@ const ItemDetails = (props) => {
                             </div>
                           </div>
                         </div>
-                      </TabPanel>
+                      </TabPanel> */}
                     </div>
                   </Tabs>
                 </div>
-                <div className="numbers">
+                {/* <div className="numbers">
                   <div className="row">
                     <div className="col-lg-6">
                       <div className="space-y-5">
@@ -369,7 +294,7 @@ const ItemDetails = (props) => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <div className="hr2" />
                 <div className="creators">
                   <div className="row">
@@ -387,13 +312,13 @@ const ItemDetails = (props) => {
                         <div>
                           <Link to="#">
                             <p className="avatars_name color_black">
-                              @ayoub_fennouni / fouzi...
+                              @{shorten(address)}
                             </p>
                           </Link>
                         </div>
                       </div>
                     </div>
-                    <div className="col-lg-6">
+                    {/* <div className="col-lg-6">
                       <div className="avatars space-x-5">
                         <div className="media">
                           <div className="badge">
@@ -419,16 +344,19 @@ const ItemDetails = (props) => {
                           </Link>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <div className="d-flex space-x-20">
-                  { client?
+                  {client ? (
                     <>
-                      <button className="btn btn-lg btn-primary" onClick={onByNow}>
+                      <button
+                        className="btn btn-lg btn-primary"
+                        onClick={onByNow}
+                      >
                         Buy Now
                       </button>
-                    {/* <Popup
+                      {/* <Popup
                     className="custom"
                     ref={ref}
                     trigger={
@@ -511,134 +439,150 @@ const ItemDetails = (props) => {
                       </div>
                     </div>
                   </Popup> */}
-                  <Popup
-                    className="custom"
-                    ref={ref}
-                    trigger={
-                      <button className="btn btn-lg btn-grad">Place Bid</button>
-                    }
-                    position="bottom center">
-                    <div>
-                      <div
-                        className="popup"
-                        id="popup_bid"
-                        tabIndex={-1}
-                        role="dialog"
-                        aria-hidden="true">
-                        <div>
-                          <button
-                            type="button"
-                            className="button close"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                            onClick={closeTooltip}>
-                            <span aria-hidden="true">×</span>
+                      <Popup
+                        className="custom"
+                        ref={ref}
+                        trigger={
+                          <button className="btn btn-lg btn-grad">
+                            Place Bid
                           </button>
-                          <div className=" space-y-20">
-                            <h3>Place a Bid</h3>
-                            <p>
-                              You must bid at least
-                              <span className="color_black">15 BNB</span>
-                            </p>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="00.00 BNB"
-                            />
-                            <p>
-                              Enter quantity.
-                              <span className="color_green">5 available</span>
-                            </p>
-                            <input
-                              type="text"
-                              className="form-control"
-                              defaultValue={1}
-                            />
-                            <div className="hr" />
-                            <div className="d-flex justify-content-between">
-                              <p> You must bid at least:</p>
-                              <p className="text-right color_black txt _bold">
-                                67,000 BNB
-                              </p>
-                            </div>
-                            <div className="d-flex justify-content-between">
-                              <p> service free:</p>
-                              <p className="text-right color_black txt _bold">
-                                0,901 BNB
-                              </p>
-                            </div>
-                            <div className="d-flex justify-content-between">
-                              <p> Total bid amount:</p>
-                              <p className="text-right color_black txt _bold">
-                                56,031 BNB
-                              </p>
-                            </div>
-                            <Popup
-                              className="custom"
-                              ref={ref}
-                              trigger={
-                                <button className="btn btn-primary w-full">
-                                  Place a bid
-                                </button>
-                              }
-                              position="bottom center">
-                              <div>
-                                <div
-                                  className="popup"
-                                  id="popup_bid"
-                                  tabIndex={-1}
-                                  role="dialog"
-                                  aria-hidden="true">
-                                  <div>
-                                    <button
-                                      type="button"
-                                      className="button close"
-                                      data-dismiss="modal"
-                                      aria-label="Close"
-                                      onClick={closeTooltip}>
-                                      <span aria-hidden="true">×</span>
+                        }
+                        position="bottom center"
+                      >
+                        <div>
+                          <div
+                            className="popup"
+                            id="popup_bid"
+                            tabIndex={-1}
+                            role="dialog"
+                            aria-hidden="true"
+                          >
+                            <div>
+                              <button
+                                type="button"
+                                className="button close"
+                                data-dismiss="modal"
+                                aria-label="Close"
+                                onClick={closeTooltip}
+                              >
+                                <span aria-hidden="true">×</span>
+                              </button>
+                              <div className=" space-y-20">
+                                <h3>Place a Bid</h3>
+                                <p>
+                                  You must bid at least
+                                  <span className="color_black">15 BNB</span>
+                                </p>
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="00.00 BNB"
+                                />
+                                <p>
+                                  Enter quantity.
+                                  <span className="color_green">
+                                    5 available
+                                  </span>
+                                </p>
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  defaultValue={1}
+                                />
+                                <div className="hr" />
+                                <div className="d-flex justify-content-between">
+                                  <p> You must bid at least:</p>
+                                  <p className="text-right color_black txt _bold">
+                                    67,000 BNB
+                                  </p>
+                                </div>
+                                <div className="d-flex justify-content-between">
+                                  <p> service free:</p>
+                                  <p className="text-right color_black txt _bold">
+                                    0,901 BNB
+                                  </p>
+                                </div>
+                                <div className="d-flex justify-content-between">
+                                  <p> Total bid amount:</p>
+                                  <p className="text-right color_black txt _bold">
+                                    56,031 BNB
+                                  </p>
+                                </div>
+                                <Popup
+                                  className="custom"
+                                  ref={ref}
+                                  trigger={
+                                    <button className="btn btn-primary w-full">
+                                      Place a bid
                                     </button>
-                                    <div className="space-y-20">
-                                      <h3 className="text-center">
-                                        Your Bidding Successfuly Added
-                                      </h3>
-                                      <p className="text-center">
-                                        your bid
-                                        <span className="color_text txt _bold">
-                                          (16BNB)
-                                        </span>
-                                        has been listing to our database
-                                      </p>
-                                      <Link
-                                        to="#"
-                                        className="btn btn-dark w-full">
-                                        Watch the listings
-                                      </Link>
+                                  }
+                                  position="bottom center"
+                                >
+                                  <div>
+                                    <div
+                                      className="popup"
+                                      id="popup_bid"
+                                      tabIndex={-1}
+                                      role="dialog"
+                                      aria-hidden="true"
+                                    >
+                                      <div>
+                                        <button
+                                          type="button"
+                                          className="button close"
+                                          data-dismiss="modal"
+                                          aria-label="Close"
+                                          onClick={closeTooltip}
+                                        >
+                                          <span aria-hidden="true">×</span>
+                                        </button>
+                                        <div className="space-y-20">
+                                          <h3 className="text-center">
+                                            Your Bidding Successfuly Added
+                                          </h3>
+                                          <p className="text-center">
+                                            your bid
+                                            <span className="color_text txt _bold">
+                                              (16BNB)
+                                            </span>
+                                            has been listing to our database
+                                          </p>
+                                          <Link
+                                            to="#"
+                                            className="btn btn-dark w-full"
+                                          >
+                                            Watch the listings
+                                          </Link>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
+                                </Popup>
                               </div>
-                            </Popup>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </Popup>
-                  </>:
-                  <>
-                  {isSale?
-                    <button className="btn btn-lg btn-primary" onClick={onRemoveSale}>
-                        Remove Sale
-                      </button>
-                      :
-                      <button className="btn btn-lg btn-primary" onClick={onSale}>
-                        Sale Now
-                      </button>
-                  }
-                    
-                  </>
-                  }
-                  
+                      </Popup>
+                    </>
+                  ) : (
+                    <>
+                      {isSale ? (
+                        <button
+                          className="btn btn-lg btn-primary"
+                          onClick={onRemoveSale}
+                        >
+                          Remove Sale
+                        </button>
+                      ) : (
+                        <button
+                          className="btn btn-lg btn-primary"
+                          onClick={onSale}
+                        >
+                          Sale Now
+                        </button>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             </div>

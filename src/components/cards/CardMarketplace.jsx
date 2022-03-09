@@ -1,57 +1,53 @@
-import React, {useRef} from 'react';
-import {Link} from 'react-router-dom';
-import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
-import { useWeb3Context } from '../../hooks';
-import { useSelector, useDispatch} from "react-redux";
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { getMarketingItems } from "../../hooks/action"
+import React, { useRef } from "react";
+import { Link } from "react-router-dom";
+import Popup from "reactjs-popup";
+import "reactjs-popup/dist/index.css";
+import { useWeb3Context } from "../../hooks";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useState } from "react";
+import { getMarketingItems } from "../../hooks/action";
 import { shorten, trim } from "../../helpers";
 
-const CardItems = [
-  {
-    avatar_img1: '1',
-    avatar_name1: 'mickel_fenn',
-    avatar_img2: '2',
-    avatar_name2: 'danil_pannini',
-    likes: '1.2',
-    img: '1',
-    title: 'Colorful Abstract Painting',
-    price: '2.45',
-    stock: '4',
-  },
-  {
-    avatar_img1: '3',
-    avatar_name1: 'mazanov_sky',
-    avatar_img2: '4',
-    avatar_name2: 'mucky_fennouni',
-    likes: '13.2',
-    img: '2',
-    title: 'The girl with the firefly',
-    price: '2.55',
-    stock: '12',
-  },
- 
-  
-];
-
+// const CardItems = [
+//   {
+//     avatar_img1: "1",
+//     avatar_name1: "mickel_fenn",
+//     avatar_img2: "2",
+//     avatar_name2: "danil_pannini",
+//     likes: "1.2",
+//     img: "1",
+//     title: "Colorful Abstract Painting",
+//     price: "2.45",
+//     stock: "4",
+//   },
+//   {
+//     avatar_img1: "3",
+//     avatar_name1: "mazanov_sky",
+//     avatar_img2: "4",
+//     avatar_name2: "mucky_fennouni",
+//     likes: "13.2",
+//     img: "2",
+//     title: "The girl with the firefly",
+//     price: "2.55",
+//     stock: "12",
+//   },
+// ];
 
 function CardMarketplace() {
   const ref = useRef();
   const { connected, connect, provider, address } = useWeb3Context();
-  const networkId = useSelector(state => state.network?.networkId) | 97;
-  let [marketingItems, setMarketingItems ] = useState([])
-  useEffect( () => {
-    if(connected){
+  const networkId = useSelector((state) => state.network?.networkId) | 97;
+  let [marketingItems, setMarketingItems] = useState([]);
+  useEffect(() => {
+    if (connected) {
       async function fetchData() {
-        const _marketingItems = await getMarketingItems(provider,networkId);
+        const _marketingItems = await getMarketingItems(provider, networkId);
         setMarketingItems(_marketingItems);
       }
       fetchData();
-      
     }
-  },[connected, address])
+  }, [connected, address]);
 
   const closeTooltip = () => ref.current.close();
   return (
@@ -68,13 +64,14 @@ function CardMarketplace() {
                       <img
                         alt="Avatar"
                         className="avatar avatar-sm"
+                        src={`img/logos/Logo.svg`}
                       />
                     </Link>
-                    <Link to="#">
+                    {/* <Link to="#">
                       <p className="avatars_name txt_xs">@mazanov_sky</p>
-                    </Link>
+                    </Link> */}
                   </div>
-                  <div className="avatars space-x-3">
+                  {/* <div className="avatars space-x-3">
                     <Link to="#">
                       <img
                         src={`img/avatars/avatar_${4}.png`}
@@ -85,36 +82,43 @@ function CardMarketplace() {
                     <Link to="#">
                       <p className="avatars_name txt_xs">@danil_pannini</p>
                     </Link>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="card_head">
-                  <Link to={{
-                    pathname: "/item-details",
-                    search: `?tokenID=${val.tokenID}&tokenURI=${val.tokenURI}&owner=${val.owner}`
-                  }}>
+                  <Link
+                    to={{
+                      pathname: "/item-details",
+                      search: `?tokenID=${val.tokenID}&tokenURI=${val.tokenURI}&owner=${val.owner}`,
+                    }}
+                  >
                     <img
-                     src={val.image} 
-                    //  src={`img/items/music/${7}.png`}
-                     alt="nftimage" />
+                      src={val.image}
+                      //  src={`img/items/music/${7}.png`}
+                      alt="nftimage"
+                    />
                   </Link>
-                  <Link to="#" className="likes space-x-3">
+                  {/* <Link to="#" className="likes space-x-3">
                     <i className="ri-heart-3-fill" />
                     <span className="txt_sm">{val.likes|0}k</span>
-                  </Link>
+                  </Link> */}
                 </div>
                 {/* =============== */}
-                <h6 className="card_title">{val.title}</h6>
+                <div className="">
+                  <h6 className="card_title">{val.title}</h6>
+                  <h6 className="">{val.description}</h6>
+                </div>
                 <div className="card_footer d-block space-y-10">
-                  <div className="card_footer justify-content-between">
+                  <div className="card_footer justify-content-start">
                     <div className="creators">
-                      <p className="txt_sm"> {val.stock|1} in stock</p>
+                      {/* <p className="txt_sm"> {val.stock | 1} in stock</p> */}
                     </div>
                     <Link to="#">
                       <p className="txt_sm">
                         Price:
                         <span
                           className="color_green
-                                                txt_sm">
+                                                txt_sm"
+                        >
                           {val.price} BNB
                         </span>
                       </p>
@@ -125,10 +129,12 @@ function CardMarketplace() {
                     className="d-flex
 						       		align-items-center
 						      		space-x-10
-							      	justify-content-between">
-                    <div
+							      	justify-content-start"
+                  >
+                    {/* <div
                       className="d-flex align-items-center
-							        		space-x-5">
+							        		space-x-5"
+                    >
                       <i className="ri-history-line" />
                       <Popup
                         className="custom"
@@ -137,26 +143,30 @@ function CardMarketplace() {
                           <button className="popup_btn">
                             <p
                               className="color_text txt_sm view_history"
-                              style={{width: 'auto'}}>
+                              style={{ width: "auto" }}
+                            >
                               View History
                             </p>
                           </button>
                         }
-                        position="bottom center">
+                        position="bottom center"
+                      >
                         <div>
                           <div
                             className="popup"
                             id="popup_bid"
                             tabIndex={-1}
                             role="dialog"
-                            aria-hidden="true">
+                            aria-hidden="true"
+                          >
                             <div>
                               <button
                                 type="button"
                                 className="button close"
                                 data-dismiss="modal"
                                 aria-label="Close"
-                                onClick={closeTooltip}>
+                                onClick={closeTooltip}
+                              >
                                 <span aria-hidden="true">×</span>
                               </button>
                               <div className="space-y-20">
@@ -188,7 +198,8 @@ function CardMarketplace() {
                                         <Link
                                           className="color_black txt
 						_bold"
-                                          to="profile">
+                                          to="profile"
+                                        >
                                           ayoub
                                         </Link>
                                       </p>
@@ -225,7 +236,8 @@ function CardMarketplace() {
                                         <Link
                                           className="color_black txt
 						_bold"
-                                          to="profile">
+                                          to="profile"
+                                        >
                                           monir
                                         </Link>
                                       </p>
@@ -240,7 +252,7 @@ function CardMarketplace() {
                           </div>
                         </div>
                       </Popup>
-                    </div>
+                    </div> */}
 
                     <Popup
                       className="custom"
@@ -250,21 +262,24 @@ function CardMarketplace() {
                           Place Bid
                         </button>
                       }
-                      position="bottom center">
+                      position="bottom center"
+                    >
                       <div>
                         <div
                           className="popup"
                           id="popup_bid"
                           tabIndex={-1}
                           role="dialog"
-                          aria-hidden="true">
+                          aria-hidden="true"
+                        >
                           <div>
                             <button
                               type="button"
                               className="button close"
                               data-dismiss="modal"
                               aria-label="Close"
-                              onClick={closeTooltip}>
+                              onClick={closeTooltip}
+                            >
                               <span aria-hidden="true">×</span>
                             </button>
                             <div className=" space-y-20">
@@ -314,21 +329,24 @@ function CardMarketplace() {
                                     Place a bid
                                   </button>
                                 }
-                                position="bottom center">
+                                position="bottom center"
+                              >
                                 <div>
                                   <div
                                     className="popup"
                                     id="popup_bid"
                                     tabIndex={-1}
                                     role="dialog"
-                                    aria-hidden="true">
+                                    aria-hidden="true"
+                                  >
                                     <div>
                                       <button
                                         type="button"
                                         className="button close"
                                         data-dismiss="modal"
                                         aria-label="Close"
-                                        onClick={closeTooltip}>
+                                        onClick={closeTooltip}
+                                      >
                                         <span aria-hidden="true">×</span>
                                       </button>
                                       <div className="space-y-20">
@@ -339,14 +357,16 @@ function CardMarketplace() {
                                           your bid
                                           <span
                                             className="color_text txt
-      _bold">
+      _bold"
+                                          >
                                             (16BNB)
                                           </span>
                                           has been listing to our database
                                         </p>
                                         <Link
                                           to="#"
-                                          className="btn btn-dark w-full">
+                                          className="btn btn-dark w-full"
+                                        >
                                           Watch the listings
                                         </Link>
                                       </div>

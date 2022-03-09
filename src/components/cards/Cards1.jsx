@@ -2,6 +2,12 @@ import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
+import { useWeb3Context } from "../../hooks";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useState } from "react";
+import { getMarketingItems } from "../../hooks/action";
+import { shorten, trim } from "../../helpers";
 
 const CardItems = [
   {
@@ -96,9 +102,22 @@ const CardItems = [
 
 const Cards1 = () => {
   const ref = useRef();
+  const { connected, connect, provider, address } = useWeb3Context();
+  const networkId = useSelector((state) => state.network?.networkId) | 97;
+  let [marketingItems, setMarketingItems] = useState([]);
+  useEffect(() => {
+    if (connected) {
+      async function fetchData() {
+        const _marketingItems = await getMarketingItems(provider, networkId);
+        setMarketingItems(_marketingItems);
+      }
+      fetchData();
+    }
+  }, [connected, address]);
+
   const closeTooltip = () => ref.current.close();
   return (
-    <div className="mt-100">
+    <div className="mt-100 " style={{ minHeight: 500 }}>
       <div className="container">
         <div className="section__head">
           <div
@@ -115,196 +134,206 @@ const Cards1 = () => {
           </div>
         </div>
         <div className="row">
-          {CardItems.map((val, i) => (
+          {marketingItems.slice(0, 4).map((val, i) => (
             <div className="col-xl-3 col-lg-4 col-md-6 col-sm-6" key={i}>
               <div className="card__item four">
                 <div className="card_body space-y-10">
                   {/* =============== */}
                   <div className="creators space-x-10">
                     <div className="avatars space-x-3">
-                      <Link to="profile">
+                      <Link to="#">
                         <img
-                          src={`img/avatars/avatar_${val.img}.png`}
                           alt="Avatar"
                           className="avatar avatar-sm"
+                          src={`img/logos/Logo.svg`}
                         />
                       </Link>
-                      <Link to="profile">
-                        <p className="avatars_name txt_xs">
-                          @{val.avatar_name1}
-                        </p>
-                      </Link>
+                      {/* <Link to="#">
+                      <p className="avatars_name txt_xs">@mazanov_sky</p>
+                    </Link> */}
                     </div>
-                    <div className="avatars space-x-3">
-                      <Link to="profile">
-                        <img
-                          src={`img/avatars/avatar_${val.avatar_img2}.png`}
-                          alt="Avatar"
-                          className="avatar avatar-sm"
-                        />
-                      </Link>
-                      <Link to="profile">
-                        <p className="avatars_name txt_xs">
-                          @{val.avatar_name2}
-                        </p>
-                      </Link>
-                    </div>
+                    {/* <div className="avatars space-x-3">
+                    <Link to="#">
+                      <img
+                        src={`img/avatars/avatar_${4}.png`}
+                        alt="Avatar"
+                        className="avatar avatar-sm"
+                      />
+                    </Link>
+                    <Link to="#">
+                      <p className="avatars_name txt_xs">@danil_pannini</p>
+                    </Link>
+                  </div> */}
                   </div>
                   <div className="card_head">
-                    <img src={`img/items/item_${val.img}.png`} alt="nftimage" />
-                    <div className="likes space-x-3">
-                      <i className="ri-heart-3-fill" />
-                      <span className="txt_sm">{val.likes}k</span>
-                    </div>
+                    <Link
+                      to={{
+                        pathname: "/item-details",
+                        search: `?tokenID=${val.tokenID}&tokenURI=${val.tokenURI}&owner=${val.owner}`,
+                      }}
+                    >
+                      <img
+                        src={val.image}
+                        //  src={`img/items/music/${7}.png`}
+                        alt="nftimage"
+                      />
+                    </Link>
+                    {/* <Link to="#" className="likes space-x-3">
+                    <i className="ri-heart-3-fill" />
+                    <span className="txt_sm">{val.likes|0}k</span>
+                  </Link> */}
                   </div>
                   {/* =============== */}
-                  <h6 className="card_title">
-                    <Link className="color_black" to="item-details">
-                      {val.title}
-                    </Link>
-                  </h6>
+                  <div className="">
+                    <h6 className="card_title">{val.title}</h6>
+                    <h6 className="">{val.description}</h6>
+                  </div>
                   <div className="card_footer d-block space-y-10">
-                    <div className="card_footer justify-content-between">
+                    <div className="card_footer justify-content-start">
                       <div className="creators">
-                        <p className="txt_sm">{val.stock} in stock</p>
+                        {/* <p className="txt_sm"> {val.stock | 1} in stock</p> */}
                       </div>
-                      <div className="txt_sm">
-                        Price:{" "}
-                        <span className="color_green txt_sm">
-                          {val.price}
-                          BNB
-                        </span>
-                      </div>
+                      <Link to="#">
+                        <p className="txt_sm">
+                          Price:
+                          <span
+                            className="color_green
+                                                txt_sm"
+                          >
+                            {val.price} BNB
+                          </span>
+                        </p>
+                      </Link>
                     </div>
                     <div className="hr" />
                     <div
                       className="d-flex
-								align-items-center
-								space-x-10
-								justify-content-between"
+						       		align-items-center
+						      		space-x-10
+							      	justify-content-start"
                     >
-                      <div
-                        className="d-flex align-items-center
-									space-x-5"
-                      >
-                        <i className="ri-history-line" />
-                        <Popup
-                          className="custom"
-                          ref={ref}
-                          trigger={
-                            <button className="popup_btn">
-                              <p
-                                className="color_text txt_sm view_history"
-                                style={{ width: "auto" }}
-                              >
-                                View History
-                              </p>
-                            </button>
-                          }
-                          position="bottom center"
-                        >
-                          <div>
-                            <div
-                              className="popup"
-                              id="popup_bid"
-                              tabIndex={-1}
-                              role="dialog"
-                              aria-hidden="true"
+                      {/* <div
+                      className="d-flex align-items-center
+							        		space-x-5"
+                    >
+                      <i className="ri-history-line" />
+                      <Popup
+                        className="custom"
+                        ref={ref}
+                        trigger={
+                          <button className="popup_btn">
+                            <p
+                              className="color_text txt_sm view_history"
+                              style={{ width: "auto" }}
                             >
-                              <div>
-                                <button
-                                  type="button"
-                                  className="button close"
-                                  data-dismiss="modal"
-                                  aria-label="Close"
-                                  onClick={closeTooltip}
-                                >
-                                  <span aria-hidden="true">×</span>
-                                </button>
-                                <div className="space-y-20">
-                                  <h4> History </h4>
-                                  <div className="creator_item creator_card space-x-10">
-                                    <div className="avatars space-x-10">
-                                      <div className="media">
-                                        <div className="badge">
-                                          <img
-                                            src={`img/icons/Badge.svg`}
-                                            alt="Badge"
-                                          />
-                                        </div>
-                                        <Link to="profile">
-                                          <img
-                                            src={`img/avatars/avatar_1.png`}
-                                            alt="Avatar"
-                                            className="avatar avatar-md"
-                                          />
-                                        </Link>
+                              View History
+                            </p>
+                          </button>
+                        }
+                        position="bottom center"
+                      >
+                        <div>
+                          <div
+                            className="popup"
+                            id="popup_bid"
+                            tabIndex={-1}
+                            role="dialog"
+                            aria-hidden="true"
+                          >
+                            <div>
+                              <button
+                                type="button"
+                                className="button close"
+                                data-dismiss="modal"
+                                aria-label="Close"
+                                onClick={closeTooltip}
+                              >
+                                <span aria-hidden="true">×</span>
+                              </button>
+                              <div className="space-y-20">
+                                <h4> History </h4>
+                                <div className="creator_item creator_card space-x-10">
+                                  <div className="avatars space-x-10">
+                                    <div className="media">
+                                      <div className="badge">
+                                        <img
+                                          src={`img/icons/Badge.svg`}
+                                          alt="Badge"
+                                        />
                                       </div>
-                                      <div>
-                                        <p className="color_black">
-                                          Bid accepted
-                                          <span className="color_brand">
-                                            1 BNB
-                                          </span>
-                                          by
-                                          <Link
-                                            className="color_black txt
-						_bold"
-                                            to="profile"
-                                          >
-                                            ayoub
-                                          </Link>
-                                        </p>
-                                        <span className="date color_text">
-                                          28/06/2021, 12:08
+                                      <Link to="profile">
+                                        <img
+                                          src={`img/avatars/avatar_1.png`}
+                                          alt="Avatar"
+                                          className="avatar avatar-md"
+                                        />
+                                      </Link>
+                                    </div>
+                                    <div>
+                                      <p className="color_black">
+                                        Bid accepted
+                                        <span className="color_brand">
+                                          1 BNB
                                         </span>
-                                      </div>
+                                        by
+                                        <Link
+                                          className="color_black txt
+						_bold"
+                                          to="profile"
+                                        >
+                                          ayoub
+                                        </Link>
+                                      </p>
+                                      <span className="date color_text">
+                                        28/06/2021, 12:08
+                                      </span>
                                     </div>
                                   </div>
-                                  <div className="creator_item creator_card space-x-10">
-                                    <div className="avatars space-x-10">
-                                      <div className="media">
-                                        <div className="badge">
-                                          <img
-                                            src={`img/icons/Badge.svg`}
-                                            alt="Badge"
-                                          />
-                                        </div>
-                                        <Link to="profile">
-                                          <img
-                                            src={`img/avatars/avatar_2.png`}
-                                            alt="Avatar"
-                                            className="avatar avatar-md"
-                                          />
-                                        </Link>
+                                </div>
+                                <div className="creator_item creator_card space-x-10">
+                                  <div className="avatars space-x-10">
+                                    <div className="media">
+                                      <div className="badge">
+                                        <img
+                                          src={`img/icons/Badge.svg`}
+                                          alt="Badge"
+                                        />
                                       </div>
-                                      <div>
-                                        <p className="color_black">
-                                          Bid accepted
-                                          <span className="color_brand">
-                                            3 BNB
-                                          </span>
-                                          by
-                                          <Link
-                                            className="color_black txt
-						_bold"
-                                            to="profile"
-                                          >
-                                            monir
-                                          </Link>
-                                        </p>
-                                        <span className="date color_text">
-                                          22/05/2021, 12:08
+                                      <Link to="profile">
+                                        <img
+                                          src={`img/avatars/avatar_2.png`}
+                                          alt="Avatar"
+                                          className="avatar avatar-md"
+                                        />
+                                      </Link>
+                                    </div>
+                                    <div>
+                                      <p className="color_black">
+                                        Bid accepted
+                                        <span className="color_brand">
+                                          3 BNB
                                         </span>
-                                      </div>
+                                        by
+                                        <Link
+                                          className="color_black txt
+						_bold"
+                                          to="profile"
+                                        >
+                                          monir
+                                        </Link>
+                                      </p>
+                                      <span className="date color_text">
+                                        22/05/2021, 12:08
+                                      </span>
                                     </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </Popup>
-                      </div>
+                        </div>
+                      </Popup>
+                    </div> */}
 
                       <Popup
                         className="custom"
@@ -440,12 +469,12 @@ const Cards1 = () => {
             </div>
           ))}
         </div>
-        <div className="d-flex justify-content-center">
+        {/* <div className="d-flex justify-content-center">
           <Link to="/marketplace" className="btn btn-sm btn-white">
             <i className="ri-restart-line" />
             View all items
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );

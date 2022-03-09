@@ -51,7 +51,22 @@ export default function TopArtist() {
   const ArtistItems = [
     {
       img: "1",
-      name: "xander_hall",
+      name: "Etherneel",
+      price: "16.58",
+    },
+    {
+      img: "2",
+      name: "Robin",
+      price: "16.58",
+    },
+    {
+      img: "3",
+      name: "Developer",
+      price: "16.58",
+    },
+    {
+      img: "4",
+      name: "John",
       price: "16.58",
     },
   ];
@@ -63,7 +78,7 @@ export default function TopArtist() {
             <h2 className="section__title mt-10">Top Artists</h2>
           </div>
           <div className="section_body swiper_artists">
-            <>
+            {/* <>
               {ArtistItems.map((val, i) => (
                 <div className="item" key={i}>
                   <div className="creator_item creator_card rounded_border space-x-10">
@@ -94,8 +109,8 @@ export default function TopArtist() {
                   </div>
                 </div>
               ))}
-            </>
-            {/* <Slider {...settings}>
+            </> */}
+            <Slider {...settings}>
               {ArtistItems.map((val, i) => (
                 <div className="item" key={i}>
                   <div className="creator_item creator_card rounded_border space-x-10">
@@ -104,7 +119,7 @@ export default function TopArtist() {
                         <div className="badge">
                           <img src={`img/icons/Badge.svg`} alt="icons" />
                         </div>
-                        <Link to="profile">
+                        <Link to="marketplace">
                           <img
                             src={`img/avatars/avatar_${val.img}.png`}
                             alt="Avatar"
@@ -113,7 +128,7 @@ export default function TopArtist() {
                         </Link>
                       </div>
                       <div>
-                        <Link to="profile">
+                        <Link to="marketplace">
                           <p className="avatars_name color_black">
                             @{val.name}...
                           </p>
@@ -126,7 +141,7 @@ export default function TopArtist() {
                   </div>
                 </div>
               ))}
-            </Slider> */}
+            </Slider>
           </div>
         </div>
       </div>

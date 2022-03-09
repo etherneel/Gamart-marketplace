@@ -1,5 +1,10 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Link } from "react-router-dom";
+import { useWeb3Context } from "../../hooks";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useState } from "react";
+import { getMarketingItems } from "../../hooks/action";
 const CollectionItems = [
   {
     img1: "9",
@@ -36,9 +41,23 @@ const CollectionItems = [
   // },
 ];
 const Collection1 = () => {
+  const { connected, connect, provider, address } = useWeb3Context();
+  const networkId = useSelector((state) => state.network?.networkId) | 97;
+  const ref = useRef();
+
+  let [marketingItems, setMarketingItems] = useState([]);
+  useEffect(() => {
+    if (connected) {
+      async function fetchData() {
+        const _marketingItems = await getMarketingItems(provider, networkId);
+        setMarketingItems(_marketingItems);
+      }
+      fetchData();
+    }
+  }, [connected, address]);
   return (
     <div>
-      <div className="section mt-100">
+      <div className="section mt-100" style={{ minHeight: 400 }}>
         <div className="container">
           <div className="section__head">
             <div className="d-flex justify-content-between align-items-center">
@@ -49,61 +68,53 @@ const Collection1 = () => {
             </div>
           </div>
           <div className="row  mb-30_reset">
-            {CollectionItems.map((val, i) => (
-              <div className="col-lg-4 col-md-6 col-sm-8" key={i}>
-                <div className="collections space-y-10 mb-30">
-                  <Link to="item-details">
+            {marketingItems.slice(4, 7).map((val, i) => {
+              // console.log(`?tokenID=${val.tokenID}&tokenURI=${val.tokenURI}`);
+              return (
+                <div className="col-lg-4 col-md-6 col-sm-8" key={i}>
+                  <div className="collections space-y-10 mb-30">
                     <div className="collections_item">
-                      <div className="images-box space-y-10">
+                      <Link
+                        to={{
+                          pathname: "/item-details",
+                          search: `?tokenID=${val.tokenID}&tokenURI=${val.tokenURI}`,
+                        }}
+                        className="images-box space-y-10"
+                      >
                         <div className="top_imgs">
-                          <img
-                            src={`img/items/item_${val.img1}.png`}
-                            alt="prv"
-                          />
-                          <img
-                            src={`img/items/item_${val.img2}.png`}
-                            alt="prv"
-                          />
-                          <img
-                            src={`img/items/item_${val.img3}.png`}
-                            alt="prv"
-                          />
+                          <img src={val.image} alt="prv" />
+                          <img src={val.image} alt="prv" />
+                          <img src={val.image} alt="prv" />
                         </div>
-                        <img src={`img/items/item_${val.img4}.png`} alt="prv" />
-                      </div>
-                    </div>
-                  </Link>
-                  <div className="collections_footer justify-content-between">
-                    <h5 className="collection_title">
-                      <Link to="profile">{val.title}</Link>
-                    </h5>
-                    <Link to="#" className="likes space-x-3">
-                      <i className="ri-heart-3-fill" />
-                      <span className="txt_md">{val.likes}k</span>
-                    </Link>
-                  </div>
-                  <div className="creators space-x-10">
-                    <span className="color_text txt_md">
-                      {val.stock} items · Created by
-                    </span>
-                    <div className="avatars space-x-5">
-                      <Link to="profile">
-                        <img
-                          src={`img/avatars/avatar_${val.avatar_img}.png`}
-                          alt="Avatar"
-                          className="avatar avatar-sm"
-                        />
+                        <img src={val.image} alt="prv" />
                       </Link>
                     </div>
-                    <Link to="profile">
-                      <p className="avatars_name txt_sm">
-                        @{val.avatar_name}..
-                      </p>
-                    </Link>
+                    <div className="collections_footer justify-content-between">
+                      <h5 className="collection_title">
+                        <Link to="profile">{val.title}</Link>
+                        <p>{val.description}</p>
+                      </h5>
+                      {/* <Link to="#" className="likes space-x-3">
+                  <i className="ri-heart-3-fill" />
+                  <span className="txt_md">{val.likes|0}k</span>
+                </Link> */}
+                    </div>
+                    <div className="creators space-x-10">
+                      <span className="color_text txt_md">Owner</span>
+                      <div className="avatars space-x-5">
+                        <Link to="profile">
+                          <img
+                            src={`img/logos/Logo.svg`}
+                            alt="Avatar"
+                            className="avatar avatar-sm"
+                          />
+                        </Link>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

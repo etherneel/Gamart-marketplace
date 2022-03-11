@@ -44,6 +44,7 @@ function CardMarketplace() {
       async function fetchData() {
         const _marketingItems = await getMarketingItems(provider, networkId);
         setMarketingItems(_marketingItems);
+        console.log(_marketingItems);
       }
       fetchData();
     }

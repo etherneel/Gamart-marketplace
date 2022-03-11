@@ -11,93 +11,82 @@ import { shorten, trim } from "../../helpers";
 
 const CardItems = [
   {
-    avatar_img1: "1",
-    avatar_name1: "mickel_fenn",
-    avatar_img2: "2",
-    avatar_name2: "danil_pannini",
-    likes: "1.2",
-    img: "1",
-    title: "Colorful Abstract Painting",
-    price: "2.45",
-    stock: "4",
+    description: "dddddddddddd",
+    image:
+      "https://ipfs.io/ipfs/QmNbKsDm9tFqh8ETDCG1K2UR7rCD1EGB2RLK6ACmBPxqb5",
+    owner: "0x923561EE12Df22b69230a3F963AB6283eC076D84",
+    price: "1",
+    title: "dddddddddd",
+    tokenID: 12,
+    tokenURI:
+      "https://ipfs.io/ipfs/QmfEjcKRdTcfpJXP8DesWiKfAT956ptXedd7yxrcG8R4Y7",
   },
-  // {
-  //   avatar_img1: '3',
-  //   avatar_name1: 'mazanov_sky',
-  //   avatar_img2: '4',
-  //   avatar_name2: 'mucky_fennouni',
-  //   likes: '13.2',
-  //   img: '2',
-  //   title: 'The girl with the firefly',
-  //   price: '2.55',
-  //   stock: '12',
-  // },
-  // {
-  //   avatar_img1: '5',
-  //   avatar_name1: 'jimmy_dom',
-  //   avatar_img2: '6',
-  //   avatar_name2: 'kristian_sefroui',
-  //   likes: '1.2',
-  //   img: '3',
-  //   title: 'Dodo hide the seek',
-  //   price: '2.45',
-  //   stock: '6',
-  // },
-  // {
-  //   avatar_img1: '1',
-  //   avatar_name1: 'Alvin_nov',
-  //   avatar_img2: '7',
-  //   avatar_name2: 'mucky_holiman',
-  //   likes: '4.1',
-  //   img: '4',
-  //   title: 'Liquid Forest Princess',
-  //   price: '0.55',
-  //   stock: '34',
-  // },
-  // {
-  //   avatar_img1: '8',
-  //   avatar_name1: 'stivan_rominok',
-  //   avatar_img2: '9',
-  //   avatar_name2: 'danil_pan',
-  //   likes: '6.4',
-  //   img: '5',
-  //   title: 'Spider Eyes Modern Art',
-  //   price: '1.45',
-  //   stock: '7',
-  // },
-  // {
-  //   avatar_img1: '10',
-  //   avatar_name1: 'mazanov_sky',
-  //   avatar_img2: '11',
-  //   avatar_name2: 'mucky_art',
-  //   likes: '13.2',
-  //   img: '6',
-  //   title: 'Synthwave Painting',
-  //   price: '0.055',
-  //   stock: '2',
-  // },
-  // {
-  //   avatar_img1: '12',
-  //   avatar_name1: 'jimmy_dom',
-  //   avatar_img2: '5',
-  //   avatar_name2: 'kristian_fel',
-  //   likes: '1.6',
-  //   img: '7',
-  //   title: 'Contemporary Abstract',
-  //   price: '0.95',
-  //   stock: '34',
-  // },
-  // {
-  //   avatar_img1: '13',
-  //   avatar_name1: 'Alvin_nov',
-  //   avatar_img2: '14',
-  //   avatar_name2: 'mucky_art',
-  //   likes: '11.5',
-  //   img: '8',
-  //   title: 'Valkyrie Abstract Art',
-  //   price: '3.55',
-  //   stock: '9',
-  // },
+  {
+    description: "test me 2",
+    image:
+      "https://ipfs.io/ipfs/QmYFQKAWgf9shjNm5CetXz2r1vJ5FHd1FXaWh4votXNSN4",
+    owner: "0x398818ca588209Fec5348e6CA901629C553c902E",
+    price: "1",
+    title: "tets me",
+    tokenID: 104,
+    tokenURI:
+      "https://ipfs.io/ipfs/QmWv7A7MKozjSrpUBdpZzGhskKAkNkjrP1DTRgLLrg253K",
+  },
+  {
+    description: "bape nft art",
+    image:
+      "https://ipfs.io/ipfs/QmSuPGnpmY8FD7tzEN5k7ynWetvSi7vcFvQvDGSkSgU4s3",
+    owner: "0xE62e1503D5ef5B405443860490acA5Eacb15ebEe",
+    price: "1",
+    title: "mybape",
+    tokenID: 65,
+    tokenURI:
+      "https://ipfs.io/ipfs/QmaywVHofpBmNSpTq4NG3SH1qwGHJaaimtFH6xke7XrDzD",
+  },
+  {
+    description: "Test NFT for demo ",
+    image:
+      "https://ipfs.io/ipfs/QmQndEUEuUu43QTwSGKmC4AGL7Wc6J99Kqvc62Nqbq2Lw3",
+    owner: "0x398818ca588209Fec5348e6CA901629C553c902E",
+    price: "1",
+    title: "test syed",
+    tokenID: 94,
+    tokenURI:
+      "https://ipfs.io/ipfs/QmUhxMvf5hfWSfWfgZHdAD2Dei1e4yhiRZEEd4dxg2vtyF",
+  },
+  {
+    description: "test",
+    image:
+      "https://ipfs.io/ipfs/QmfQ5BtCdG1634ZhXQZhYRN33bKvShJCW7fpHLvbFv5b5m",
+    owner: "0x398818ca588209Fec5348e6CA901629C553c902E",
+    price: "1",
+    title: "test",
+    tokenID: 54,
+    tokenURI:
+      "https://ipfs.io/ipfs/QmaiBRqV5ByQ4FSAHLkrhrpXWNPRuqi9LP61mNetyPxa1r",
+  },
+  {
+    description: "215 289 085",
+    image:
+      "https://ipfs.io/ipfs/QmeY2AaX2eNqxkf8N7EwWiq1JkUCytxMj6crBrKmqgoqCn",
+    owner: "0x398818ca588209Fec5348e6CA901629C553c902E",
+    price: "1",
+    title: "g215 289 085",
+    tokenID: 70,
+    tokenURI:
+      "https://ipfs.io/ipfs/QmWLNpT1VGD5dfNH9mGR7Y3a5Hshp1grat64yDeB5J5dSp",
+  },
+  {
+    description: "football game",
+    image:
+      "https://ipfs.io/ipfs/Qmdt44FywbtR6CXGwXVB96anbuG9PQ6psC129kyHh1pu1X",
+    owner: "0xfDa4dc8B69161F51484Fb58Ca8c07a6ADe510f69",
+    price: "1",
+    title: "football",
+    tokenID: 17,
+    tokenURI:
+      "https://ipfs.io/ipfs/QmceUUPemGSA5vPZvEQGpM9ZLYHzFJdj2BXSK9aAvVevGk",
+  },
 ];
 
 const Cards1 = () => {
@@ -110,6 +99,7 @@ const Cards1 = () => {
       async function fetchData() {
         const _marketingItems = await getMarketingItems(provider, networkId);
         setMarketingItems(_marketingItems);
+        console.log(_marketingItems);
       }
       fetchData();
     }
@@ -134,7 +124,7 @@ const Cards1 = () => {
           </div>
         </div>
         <div className="row">
-          {marketingItems.slice(0, 4).map((val, i) => (
+          {CardItems.slice(0, 4).map((val, i) => (
             <div className="col-xl-3 col-lg-4 col-md-6 col-sm-6" key={i}>
               <div className="card__item four">
                 <div className="card_body space-y-10">

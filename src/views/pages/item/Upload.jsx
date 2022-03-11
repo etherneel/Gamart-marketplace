@@ -1,54 +1,50 @@
-import React from 'react';
-import axios from 'axios';
-import {Link} from 'react-router-dom';
-import { useSelector, useDispatch} from "react-redux";
-import useDocumentTitle from '../../../components/useDocumentTitle';
-import Header from '../../../components/header/Header';
-import { useState } from 'react';
-import createItem from "../../../hooks/action"
+import React from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import useDocumentTitle from "../../../components/useDocumentTitle";
+import Header from "../../../components/header/Header";
+import { useState } from "react";
+import createItem from "../../../hooks/action";
 import { useWeb3Context } from "../../../hooks/web3Context";
 import { initializeNetwork } from "../../../slices/NetworkSlice";
 import { error } from "../../../slices/MessagesSlice";
 const Upload = () => {
   const { connected, provider } = useWeb3Context();
-  const networkId = useSelector(state => state.network?.networkId) | 97
+  const networkId = useSelector((state) => state.network?.networkId) | 97;
   const dispatch = useDispatch();
-  const [ selectedFile, setSelectedFile ] = useState()
-  const [ title, setTitle ] = useState('');
-  const [ description, setDescription ] = useState("");
-  const [ price, setPrice ] = useState(0);
-  const onFileChange = (e)=>  {
-    alert(e.target.files[0].name)
+  const [selectedFile, setSelectedFile] = useState();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState(0);
+  const onFileChange = (e) => {
+    alert(e.target.files[0].name);
     setSelectedFile(e.target.files[0]);
   };
-  useDocumentTitle(' Upload');
+  useDocumentTitle(" Upload");
   const idToHexString = (id) => {
     return "0x" + id.toString(16);
   };
-  const onCreateItem = async () =>{
-    if(connected){
-      const id = await provider.getNetwork().then(network => network.chainId);
-      if(id!=97){
-        dispatch(error("Please switch to a suppoted network!"))
-        await provider.send("wallet_switchEthereumChain", [{ chainId: idToHexString(97) }]);
+  const onCreateItem = async () => {
+    if (connected) {
+      const id = await provider.getNetwork().then((network) => network.chainId);
+      if (id != 97) {
+        dispatch(error("Please switch to a suppoted network!"));
+        await provider.send("wallet_switchEthereumChain", [
+          { chainId: idToHexString(97) },
+        ]);
       }
       const formData = new FormData();
       // Update the formData object
-      formData.append(
-        "myFile",
-        selectedFile
-      );
-      formData.append('title', title); 
-      formData.append('price', price); 
-      formData.append('description', description); 
+      formData.append("myFile", selectedFile);
+      formData.append("title", title);
+      formData.append("price", price);
+      formData.append("description", description);
       createItem(formData, provider, networkId);
-    }else{
+    } else {
       dispatch(initializeNetwork({ provider: provider }));
     }
-
-  
-
-  }
+  };
   return (
     <div>
       <Header />
@@ -86,7 +82,7 @@ const Upload = () => {
                   <Link to="#" className="btn btn-white">
                     Browse files
                   </Link>
-                  <input type="file" onChange={onFileChange}/>
+                  <input type="file" onChange={onFileChange} />
                 </div>
               </div>
             </div>
@@ -100,7 +96,9 @@ const Upload = () => {
                       className="form-control"
                       placeholder="e. g. `gamart design art`"
                       value={title}
-                      onChange={(e)=>{setTitle(e.target.value)}}
+                      onChange={(e) => {
+                        setTitle(e.target.value);
+                      }}
                     />
                   </div>
                   <div className="space-y-10">
@@ -113,7 +111,9 @@ const Upload = () => {
                       className="form-control"
                       placeholder="e. g. `gamart design art`"
                       value={description}
-                      onChange={(e) => {setDescription(e.target.value)}}
+                      onChange={(e) => {
+                        setDescription(e.target.value);
+                      }}
                     />
                   </div>
                   <div className="space-y-10">
@@ -122,7 +122,10 @@ const Upload = () => {
                       className="form-select custom-select"
                       aria-label="Default select example"
                       value={price}
-                      onChange={(e) => {setPrice(e.target.value)}}>
+                      onChange={(e) => {
+                        setPrice(e.target.value);
+                      }}
+                    >
                       <option value={0}> 00.00 BNB</option>
                       <option value={1}>01.00 BNB</option>
                       <option value={2}>02.00 BNB</option>
@@ -130,7 +133,7 @@ const Upload = () => {
                       <option value={20}>20.00 BNB</option>
                     </select>
                   </div>
-                  <div className="space-y-10">
+                  {/* <div className="space-y-10">
                     <span className="variationInput">Choose collection</span>
                     <div className="d-flex flex-column flex-md-row">
                       <div className="choose_collection bg_black  ">
@@ -144,17 +147,17 @@ const Upload = () => {
                         </span>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
-              <p className="color_black">
+              {/* <p className="color_black">
                 <span className="color_text text-bold"> Service fee : </span>
                 2.5%
-              </p>
-              <p className="color_black">
+              </p> */}
+              {/* <p className="color_black">
                 <span className="color_text text-bold">You will receive :</span>
                 22.425 BNB $41,637.78
-              </p>
+              </p> */}
               <p></p>
             </div>
           </div>
@@ -168,7 +171,8 @@ const Upload = () => {
                 <Link
                   to="/"
                   className="btn btn-white
-						others_btn">
+						others_btn"
+                >
                   Cancel
                 </Link>
                 {/* <Link to="#" className="btn btn-dark others_btn">
@@ -181,7 +185,7 @@ const Upload = () => {
                 // to="item-details"
                 className="btn btn-grad	btn_create"
                 onClick={onCreateItem}
-                >
+              >
                 Create item
               </div>
             </div>
